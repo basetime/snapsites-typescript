@@ -1,0 +1,25 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "noImplicitReturns": true,
+    "noUnusedLocals": true,
+    "esModuleInterop": true,
+    "outDir": "dist",
+    "sourceMap": true,
+    "strict": true,
+    "target": "es2017",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "paths": {
+      "@/*": ["./src/*"]
+    },
+    "typeRoots": [
+      "node_modules/@types",
+      "src/@types"
+    ]
+  },
+  "compileOnSave": true,
+  "include": [
+    "src"
+  ]
+}
