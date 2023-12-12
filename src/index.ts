@@ -1,5 +1,5 @@
-import { ApiRequest } from './ApiRequest';
-import { ApiResponse } from './ApiResponse';
+import { ApiRequest, BatchApiRequest } from './ApiRequest';
+import { ApiResponse, BatchApiResponse } from './ApiResponse';
 import { Client } from './Client';
 
-export { Client, ApiResponse, ApiRequest };
+export { Client, BatchApiResponse, ApiResponse, ApiRequest, BatchApiRequest };

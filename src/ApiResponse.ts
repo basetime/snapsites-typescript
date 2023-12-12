@@ -1,7 +1,7 @@
 /**
- * Response returned to the client.
+ * Response returned to the client for batch requests.
  */
-export interface ApiResponse {
+export interface BatchApiResponse {
   /**
    * The unique id of the request.
    *
@@ -30,7 +30,12 @@ export interface ApiResponse {
    * Number of milliseconds it took to complete the request.
    */
   time: number;
+}
 
+/**
+ * Response returned to the client.
+ */
+export interface ApiResponse extends BatchApiResponse {
   /**
    * The images generated during the ApiRequest.
    *
