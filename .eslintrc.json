@@ -18,8 +18,7 @@
     "sourceType": "module"
   },
   "ignorePatterns": [
-    "esbuild.js",
-    "build/**/*"
+    "dist/**/*"
   ],
   "settings": {
     "import/parsers": {

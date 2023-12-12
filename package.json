@@ -1,7 +1,7 @@
 {
-  "name": "snapsites-typescript",
+  "name": "@basetime/snapsites-typescript",
   "version": "0.0.1",
-  "description": "",
+  "description": "Typescript client library for using Snapsites.io.",
   "main": "dist/index.js",
   "scripts": {
     "build": "tsc",
@@ -13,6 +13,9 @@
   "license": "ISC",
   "devDependencies": {
     "@trivago/prettier-plugin-sort-imports": "^4.3.0",
+    "@typescript-eslint/eslint-plugin": "^6.14.0",
+    "@typescript-eslint/parser": "^6.14.0",
+    "eslint": "^8.55.0",
     "prettier": "^3.1.1",
     "typescript": "^5.3.3"
   }
