@@ -10,11 +10,6 @@ axios.defaults.baseURL = 'http://dev-api.snapsites.io';
  */
 export class Client {
   /**
-   * The API key created when the endpoint was created.
-   */
-  public apiKey: string;
-
-  /**
    * The API secret created when the endpoint was created.
    */
   public apiSecret: string;
@@ -31,11 +26,9 @@ export class Client {
   /**
    * Constructor
    *
-   * @param apiKey The API key for the endpoint.
    * @param apiSecret The API secret for the endpoint.
    */
-  constructor(apiKey: string, apiSecret: string) {
-    this.apiKey = apiKey;
+  constructor(apiSecret: string) {
     this.apiSecret = apiSecret;
   }
 
@@ -79,7 +72,6 @@ export class Client {
     const body = { ...Client.defaultApiRequest, ...req };
     const resp = await axios.post<ApiResponse>(`/${endpoint}`, body, {
       headers: {
-        'X-Api-Key': this.apiKey,
         'X-Api-Secret': this.apiSecret,
       },
     });
@@ -131,7 +123,6 @@ export class Client {
 
     const resp = await axios.post<BatchApiResponse>(`/${endpoint}`, body, {
       headers: {
-        'X-Api-Key': this.apiKey,
         'X-Api-Secret': this.apiSecret,
       },
     });
@@ -148,7 +139,6 @@ export class Client {
   public status = async (endpoint: string, id: string): Promise<ApiStatus> => {
     const resp = await axios.get<ApiStatus>(`/${endpoint}/status/${id}`, {
       headers: {
-        'X-Api-Key': this.apiKey,
         'X-Api-Secret': this.apiSecret,
       },
     });

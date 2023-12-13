@@ -24,11 +24,10 @@ Use the `screenshot` method to take a screenshot of a website.
 import { Client } from '@basetime/snapsites-typescript';
 
 (async () => {
-    const apiKey = '123';
     const apiSecret = '123';
     const endpointId = 'dyNmcmgxd4BFmuffdwCBV0';
 
-    const client = new Client(apiKey, apiSecret);
+    const client = new Client(apiSecret);
     const resp = await client.screenshot(endpointId, {
         url: 'https://avagate.com',
         type: 'jpg',
@@ -60,12 +59,11 @@ Use the `batchScreenshots` method to take multiple screenshots at once.
 import { Client } from '@basetime/snapsites-typescript';
 
 (async () => {
-    const apiKey = '123';
     const apiSecret = '123';
     const endpointId = 'dyNmcmgxd4BFmuffdwCBV0';
 
     // When sending batch requests, a unique key is required for each scrape page.
-    const client = new Client(apiKey, apiSecret);
+    const client = new Client(apiSecret);
     const resp = await client.batchScreenshots(endpointId, {
         'avagate': {
             url: 'https://avagate.com',
@@ -106,12 +104,11 @@ Use the `status` method to get the status of a screenshot request.
 import { Client } from '@basetime/snapsites-typescript';
 
 (async () => {
-    const apiKey = '123';
     const apiSecret = '123';
     const endpointId = 'dyNmcmgxd4BFmuffdwCBV0';
     const requestId = '1917c524-044d-456b-b7af-4397499dade8';
 
-    const client = new Client(apiKey, apiSecret);
+    const client = new Client(apiSecret);
     const resp = await client.status(endpointId, requestId);
     console.log(resp);
 })();

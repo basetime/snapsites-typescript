@@ -13,10 +13,9 @@ class Client {
     /**
      * Constructor
      *
-     * @param apiKey The API key for the endpoint.
      * @param apiSecret The API secret for the endpoint.
      */
-    constructor(apiKey, apiSecret) {
+    constructor(apiSecret) {
         /**
          * Takes a screenshot of a page.
          *
@@ -57,7 +56,6 @@ class Client {
             const body = Object.assign(Object.assign({}, Client.defaultApiRequest), req);
             const resp = await axios_1.default.post(`/${endpoint}`, body, {
                 headers: {
-                    'X-Api-Key': this.apiKey,
                     'X-Api-Secret': this.apiSecret,
                 },
             });
@@ -103,7 +101,6 @@ class Client {
             });
             const resp = await axios_1.default.post(`/${endpoint}`, body, {
                 headers: {
-                    'X-Api-Key': this.apiKey,
                     'X-Api-Secret': this.apiSecret,
                 },
             });
@@ -118,13 +115,11 @@ class Client {
         this.status = async (endpoint, id) => {
             const resp = await axios_1.default.get(`/${endpoint}/status/${id}`, {
                 headers: {
-                    'X-Api-Key': this.apiKey,
                     'X-Api-Secret': this.apiSecret,
                 },
             });
             return resp.data;
         };
-        this.apiKey = apiKey;
         this.apiSecret = apiSecret;
     }
 }

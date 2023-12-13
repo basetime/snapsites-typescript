@@ -4,7 +4,7 @@
   "description": "Typescript client library for using Snapsites.io.",
   "main": "dist/index.js",
   "scripts": {
-    "build": "tsc",
+    "build": "tsc --declaration",
     "dev": "tsc -w",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
