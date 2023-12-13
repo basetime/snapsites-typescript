@@ -135,46 +135,6 @@ export class Client {
       },
     });
 
-    return await this.pollForResponse(resp.data.status);
-  };
-
-  /**
-   * Keeps checking the status of a request until it's no longer running.
-   *
-   * @param url The status url.
-   * @param timeout How long to wait until timing out.
-   */
-  private pollForResponse = async (
-    url: string,
-    timeout: number = 1000 * 60,
-  ): Promise<BatchApiResponse> => {
-    let resp = await this.fetchStatus(url);
-
-    const start = new Date().getTime();
-    while (resp.status === 'running') {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      if (new Date().getTime() - start > timeout) {
-        throw new Error('Timeout');
-      }
-      resp = await this.fetchStatus(url);
-    }
-
-    return resp;
-  };
-
-  /**
-   * Fetches the status page at the given url.
-   *
-   * @param url The url to fetch.
-   */
-  private fetchStatus = async (url: string): Promise<BatchApiResponse> => {
-    const resp = await axios.get(url, {
-      headers: {
-        'X-Api-Key': this.apiKey,
-        'X-Api-Secret': this.apiSecret,
-      },
-    });
-
     return resp.data;
   };
 }
