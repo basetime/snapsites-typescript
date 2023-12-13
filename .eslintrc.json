@@ -26,15 +26,6 @@
         ".ts",
         ".tsx"
       ]
-    },
-    "import/resolver": {
-      "typescript": {},
-      "node": {
-        "extensions": [
-          ".ts"
-        ],
-        "moduleDirectory": ["node_modules", "src/"]
-      }
     }
   },
   "plugins": [
