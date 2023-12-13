@@ -45,7 +45,7 @@ Outputs:
   "time": 13085,
   "cost": -0.1,
   "balance": 9492.2,
-  "status": "http://api.snapsites.io/status/1917c524-044d-456b-b7af-4397499dade8",
+  "status": "http://api.snapsites.io/dyNmcmgxd4BFmuffdwCBV0/status/1917c524-044d-456b-b7af-4397499dade8",
   "images": {
     "0": "https://storage.googleapis.com/cdn_snapsites_io/rhsV7rpKEyb6Ng1KxiDupA.jpeg"
   },
@@ -90,7 +90,7 @@ Outputs:
   "time": 13085,
   "cost": -0.1,
   "balance": 9492.2,
-  "status": "http://api.snapsites.io/status/1917c524-044d-456b-b7af-4397499dade8",
+  "status": "http://api.snapsites.io/dyNmcmgxd4BFmuffdwCBV0/status/1917c524-044d-456b-b7af-4397499dade8",
   "images": {
     "avagate": "https://storage.googleapis.com/cdn_snapsites_io/rhsV7rpKEyb6Ng1KxiDup3.jpeg",
     "google": "https://storage.googleapis.com/cdn_snapsites_io/5hs56rpKEyb6Ng1KxiDupA.jpeg"
@@ -108,9 +108,11 @@ import { Client } from '@basetime/snapsites-typescript';
 (async () => {
     const apiKey = '123';
     const apiSecret = '123';
+    const endpointId = 'dyNmcmgxd4BFmuffdwCBV0';
+    const requestId = '1917c524-044d-456b-b7af-4397499dade8';
 
     const client = new Client(apiKey, apiSecret);
-    const resp = await client.status('1917c524-044d-456b-b7af-4397499dade8');
+    const resp = await client.status(endpointId, requestId);
     console.log(resp);
 })();
 ```

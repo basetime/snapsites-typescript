@@ -142,10 +142,11 @@ export class Client {
   /**
    * Gets the status of a request.
    *
+   * @param endpoint The ID of the endpoint to use.
    * @param id The ID of the request.
    */
-  public status = async (id: string): Promise<ApiStatus> => {
-    const resp = await axios.get<ApiStatus>(`/status/${id}`, {
+  public status = async (endpoint: string, id: string): Promise<ApiStatus> => {
+    const resp = await axios.get<ApiStatus>(`/${endpoint}/status/${id}`, {
       headers: {
         'X-Api-Key': this.apiKey,
         'X-Api-Secret': this.apiSecret,
