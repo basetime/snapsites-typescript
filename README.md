@@ -3,7 +3,7 @@ Snapsites Typescript
 Typescript client library for using Snapsites.io.
 
 ## Installation
-Add the github path to your `package.json` file.
+Add the GitHub path to your `package.json` file.
 ```json
 {
     "dependencies": {
@@ -15,6 +15,9 @@ Add the github path to your `package.json` file.
 And then run `pnpm install`.
 
 ## Usage
+An API key and secret are required to use the client.
+
+### screenshot
 Use the `screenshot` method to take a screenshot of a website.
 
 ```typescript
@@ -50,6 +53,7 @@ Outputs:
 }
 ```
 
+### batchScreenshots
 Use the `batchScreenshots` method to take multiple screenshots at once.
 
 ```typescript
@@ -92,5 +96,56 @@ Outputs:
     "google": "https://storage.googleapis.com/cdn_snapsites_io/5hs56rpKEyb6Ng1KxiDupA.jpeg"
   },
   "pdfs": {}
+}
+```
+
+### status
+Use the `status` method to get the status of a screenshot request.
+
+```typescript
+import { Client } from '@basetime/snapsites-typescript';
+
+(async () => {
+    const apiKey = '123';
+    const apiSecret = '123';
+
+    const client = new Client(apiKey, apiSecret);
+    const resp = await client.status('1917c524-044d-456b-b7af-4397499dade8');
+    console.log(resp);
+})();
+```
+
+Outputs:
+
+```json
+{
+    "id": "bffd4858-16fd-4c6a-827c-a312782ddb22",
+    "status": "success",
+    "currentStep": 4,
+    "totalSteps": 4,
+    "cost": -0.2,
+    "images": {
+        "first": "https://storage.googleapis.com/cdn_snapsites_io/vsBL31sgW95SCv4fDYxSU2.jpeg",
+        "second": "https://storage.googleapis.com/cdn_snapsites_io/vzmbLxv7vp6vkqnhcD1995.jpeg"
+    },
+    "pdfs": {},
+    "logs": [
+        "[2023-12-13T02:15:29.829Z] debug: Injected script \"https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js\".",
+        "[2023-12-13T02:15:29.832Z] debug: Injected internal script.",
+        "[2023-12-13T02:15:39.613Z] debug: Saved in bucket cdn_snapsites_io at https://storage.googleapis.com/cdn_snapsites_io/vsBL31sgW95SCv4fDYxSU2.jpeg",
+        "[2023-12-13T02:15:29.818Z] debug: Injected script \"https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js\".",
+        "[2023-12-13T02:15:29.822Z] debug: Injected internal script.",
+        "[2023-12-13T02:15:43.504Z] debug: Saved in bucket cdn_snapsites_io at https://storage.googleapis.com/cdn_snapsites_io/vzmbLxv7vp6vkqnhcD1995.jpeg"
+    ],
+    "request": {
+        "first": {
+            "url": "https://avagate.com",
+            "type": "jpg"
+        },
+        "second": {
+            "url": "https://google.com",
+            "type": "jpg"
+        }
+    }
 }
 ```

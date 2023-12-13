@@ -1,6 +1,7 @@
 import axios from 'axios';
-import { ApiRequest, BatchApiRequest } from '@/ApiRequest';
+import { ApiRequest, BatchApiRequest } from './ApiRequest';
 import { ApiResponse, BatchApiResponse } from './ApiResponse';
+import { ApiStatus } from './ApiStatus';
 
 axios.defaults.baseURL = 'http://dev-api.snapsites.io';
 
@@ -129,6 +130,22 @@ export class Client {
     });
 
     const resp = await axios.post<BatchApiResponse>(`/${endpoint}`, body, {
+      headers: {
+        'X-Api-Key': this.apiKey,
+        'X-Api-Secret': this.apiSecret,
+      },
+    });
+
+    return resp.data;
+  };
+
+  /**
+   * Gets the status of a request.
+   *
+   * @param id The ID of the request.
+   */
+  public status = async (id: string): Promise<ApiStatus> => {
+    const resp = await axios.get<ApiStatus>(`/status/${id}`, {
       headers: {
         'X-Api-Key': this.apiKey,
         'X-Api-Secret': this.apiSecret,
