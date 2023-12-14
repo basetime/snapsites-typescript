@@ -16,6 +16,11 @@ export interface ApiRequest {
    * The type of the file to be generated.
    */
   type?: 'jpg' | 'png' | 'pdf';
+
+  /**
+   * Additional options passed to the integrations.
+   */
+  options?: Record<string, any>;
 }
 
 /**

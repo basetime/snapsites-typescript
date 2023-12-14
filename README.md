@@ -97,6 +97,32 @@ Outputs:
 }
 ```
 
+Some integrations may require request-time configuration. For example, you may want to tell the Google Cloud Storage integration which filename to use. You can do this by passing the `options` parameter.
+
+```typescript
+import { Client } from '@basetime/snapsites-typescript';
+
+(async () => {
+    const apiSecret = '123';
+    const endpointId = 'dyNmcmgxd4BFmuffdwCBV0';
+
+    // When sending batch requests, a unique key is required for each scrape page.
+    const client = new Client(apiSecret);
+    const resp = await client.batchScreenshots(endpointId, {
+        'google': {
+            url: 'https://google.com',
+            type: 'jpg',
+            options: {
+                GoogleCloudStorage: {
+                    filename: 'google.jpg'
+                }
+            }
+        }
+    });
+    console.log(resp);
+})();
+```
+
 ### status
 Use the `status` method to get the status of a screenshot request.
 
