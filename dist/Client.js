@@ -21,6 +21,7 @@ class Client {
          *
          * ```ts
          * const resp = await client.screenshot('dyNmcmgxd4BFmuffdwCBV0', {
+         *    browser: 'chromium',
          *    url: 'https://avagate.com',
          *    type: 'jpg',
          * });
@@ -32,10 +33,10 @@ class Client {
          * //   status: 'https://api.snapsites.io/status/7473bbe4-b2bf-4858-9a9c-476d302df5b9',
          * //   cost: -0.2,
          * //   balance: 1000,
-         * //   images: {
-         * //     '0': 'https://api.snapsites.io/image/123.jpg'
-         * //   },
-         * //   pdfs: {}
+         * //   images: [
+         * //     'https://api.snapsites.io/image/123.jpg'
+         * //   ],
+         * //   pdfs: []
          * // }
          * ```
          *
@@ -64,17 +65,21 @@ class Client {
         /**
          * Sends a batch of screenshots to be taken.
          *
+         * The images/pdfs will be returned in the same order they were listed in the request.
+         *
          * ```ts
-         * const resp = await client.screenshot('dyNmcmgxd4BFmuffdwCBV0', {
-         *    'splash-1': {
-         *      url: 'https://avagate.com/splash-1',
+         * const resp = await client.batchScreenshots('dyNmcmgxd4BFmuffdwCBV0', [
+         *    {
+         *      browser: 'chromium',
+         *      url: 'https://avagate.com',
          *      type: 'jpg',
          *    },
-         *    'splash-2': {
-         *      url: 'https://avagate.com/splash-2',
+         *    {
+         *      browser: 'firefox',
+         *      url: 'https://avagate.com',
          *      type: 'jpg',
          *    },
-         * });
+         * ]);
          * console.log(resp);
          *
          * // {
@@ -83,11 +88,11 @@ class Client {
          * //   status: 'https://api.snapsites.io/status/7473bbe4-b2bf-4858-9a9c-476d302df5b9',
          * //   cost: -0.2,
          * //   balance: 1000,
-         * //   images: {
-         * //     'splash-1': 'https://api.snapsites.io/image/123.jpg',
-         * //     'splash-2': 'https://api.snapsites.io/image/456.jpg',
-         * //   },
-         * //   pdfs: {}
+         * //   images: [
+         * //     'https://api.snapsites.io/image/123.jpg',
+         * //     'https://api.snapsites.io/image/456.jpg',
+         * //   ],
+         * //   pdfs: []
          * // }
          * ```
          *
@@ -95,10 +100,10 @@ class Client {
          * @param req The details of the page to screenshot.
          */
         this.batchScreenshots = async (endpoint, req) => {
-            const body = {};
-            Object.keys(req).forEach((key) => {
-                body[key] = Object.assign(Object.assign({}, Client.defaultApiRequest), req[key]);
-            });
+            const body = [];
+            for (let i = 0; i < req.length; i++) {
+                body.push(Object.assign(Object.assign({}, Client.defaultApiRequest), req[i]));
+            }
             const resp = await axios_1.default.post(`/${endpoint}`, body, {
                 headers: {
                     'X-Api-Secret': this.apiSecret,
@@ -110,10 +115,10 @@ class Client {
          * Gets the status of a request.
          *
          * @param endpoint The ID of the endpoint to use.
-         * @param id The ID of the request.
+         * @param apiRequest The ID of the request.
          */
-        this.status = async (endpoint, id) => {
-            const resp = await axios_1.default.get(`/${endpoint}/status/${id}`, {
+        this.status = async (endpoint, apiRequest) => {
+            const resp = await axios_1.default.get(`/${endpoint}/status/${apiRequest}`, {
                 headers: {
                     'X-Api-Secret': this.apiSecret,
                 },
@@ -128,6 +133,7 @@ exports.Client = Client;
  * The default request to use when making a request.
  */
 Client.defaultApiRequest = {
+    browser: 'chromium',
     url: '',
     html: '',
     type: 'jpg',

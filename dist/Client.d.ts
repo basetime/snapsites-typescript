@@ -1,4 +1,4 @@
-import { ApiRequest, BatchApiRequest } from './ApiRequest';
+import { ScrapeRequest } from './ApiRequest';
 import { ApiResponse, BatchApiResponse } from './ApiResponse';
 import { ApiStatus } from './ApiStatus';
 /**
@@ -12,7 +12,7 @@ export declare class Client {
     /**
      * The default request to use when making a request.
      */
-    static defaultApiRequest: ApiRequest;
+    static defaultApiRequest: Partial<ScrapeRequest>;
     /**
      * Constructor
      *
@@ -24,6 +24,7 @@ export declare class Client {
      *
      * ```ts
      * const resp = await client.screenshot('dyNmcmgxd4BFmuffdwCBV0', {
+     *    browser: 'chromium',
      *    url: 'https://avagate.com',
      *    type: 'jpg',
      * });
@@ -35,10 +36,10 @@ export declare class Client {
      * //   status: 'https://api.snapsites.io/status/7473bbe4-b2bf-4858-9a9c-476d302df5b9',
      * //   cost: -0.2,
      * //   balance: 1000,
-     * //   images: {
-     * //     '0': 'https://api.snapsites.io/image/123.jpg'
-     * //   },
-     * //   pdfs: {}
+     * //   images: [
+     * //     'https://api.snapsites.io/image/123.jpg'
+     * //   ],
+     * //   pdfs: []
      * // }
      * ```
      *
@@ -55,21 +56,25 @@ export declare class Client {
      * @param endpoint The ID of the endpoint to use.
      * @param req The details of the page to screenshot.
      */
-    screenshot: (endpoint: string, req: ApiRequest) => Promise<ApiResponse>;
+    screenshot: (endpoint: string, req: ScrapeRequest) => Promise<ApiResponse>;
     /**
      * Sends a batch of screenshots to be taken.
      *
+     * The images/pdfs will be returned in the same order they were listed in the request.
+     *
      * ```ts
-     * const resp = await client.screenshot('dyNmcmgxd4BFmuffdwCBV0', {
-     *    'splash-1': {
-     *      url: 'https://avagate.com/splash-1',
+     * const resp = await client.batchScreenshots('dyNmcmgxd4BFmuffdwCBV0', [
+     *    {
+     *      browser: 'chromium',
+     *      url: 'https://avagate.com',
      *      type: 'jpg',
      *    },
-     *    'splash-2': {
-     *      url: 'https://avagate.com/splash-2',
+     *    {
+     *      browser: 'firefox',
+     *      url: 'https://avagate.com',
      *      type: 'jpg',
      *    },
-     * });
+     * ]);
      * console.log(resp);
      *
      * // {
@@ -78,23 +83,23 @@ export declare class Client {
      * //   status: 'https://api.snapsites.io/status/7473bbe4-b2bf-4858-9a9c-476d302df5b9',
      * //   cost: -0.2,
      * //   balance: 1000,
-     * //   images: {
-     * //     'splash-1': 'https://api.snapsites.io/image/123.jpg',
-     * //     'splash-2': 'https://api.snapsites.io/image/456.jpg',
-     * //   },
-     * //   pdfs: {}
+     * //   images: [
+     * //     'https://api.snapsites.io/image/123.jpg',
+     * //     'https://api.snapsites.io/image/456.jpg',
+     * //   ],
+     * //   pdfs: []
      * // }
      * ```
      *
      * @param endpoint The ID of the endpoint to use.
      * @param req The details of the page to screenshot.
      */
-    batchScreenshots: (endpoint: string, req: BatchApiRequest) => Promise<BatchApiResponse>;
+    batchScreenshots: (endpoint: string, req: ScrapeRequest[]) => Promise<BatchApiResponse>;
     /**
      * Gets the status of a request.
      *
      * @param endpoint The ID of the endpoint to use.
-     * @param id The ID of the request.
+     * @param apiRequest The ID of the request.
      */
-    status: (endpoint: string, id: string) => Promise<ApiStatus>;
+    status: (endpoint: string, apiRequest: string) => Promise<ApiStatus>;
 }

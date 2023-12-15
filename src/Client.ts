@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { ApiRequest, BatchApiRequest } from './ApiRequest';
+import { ScrapeRequest } from './ApiRequest';
 import { ApiResponse, BatchApiResponse } from './ApiResponse';
 import { ApiStatus } from './ApiStatus';
 
@@ -17,7 +17,8 @@ export class Client {
   /**
    * The default request to use when making a request.
    */
-  public static defaultApiRequest: ApiRequest = {
+  public static defaultApiRequest: Partial<ScrapeRequest> = {
+    browser: 'chromium',
     url: '',
     html: '',
     type: 'jpg',
@@ -37,6 +38,7 @@ export class Client {
    *
    * ```ts
    * const resp = await client.screenshot('dyNmcmgxd4BFmuffdwCBV0', {
+   *    browser: 'chromium',
    *    url: 'https://avagate.com',
    *    type: 'jpg',
    * });
@@ -48,10 +50,10 @@ export class Client {
    * //   status: 'https://api.snapsites.io/status/7473bbe4-b2bf-4858-9a9c-476d302df5b9',
    * //   cost: -0.2,
    * //   balance: 1000,
-   * //   images: {
-   * //     '0': 'https://api.snapsites.io/image/123.jpg'
-   * //   },
-   * //   pdfs: {}
+   * //   images: [
+   * //     'https://api.snapsites.io/image/123.jpg'
+   * //   ],
+   * //   pdfs: []
    * // }
    * ```
    *
@@ -68,7 +70,7 @@ export class Client {
    * @param endpoint The ID of the endpoint to use.
    * @param req The details of the page to screenshot.
    */
-  public screenshot = async (endpoint: string, req: ApiRequest): Promise<ApiResponse> => {
+  public screenshot = async (endpoint: string, req: ScrapeRequest): Promise<ApiResponse> => {
     const body = { ...Client.defaultApiRequest, ...req };
     const resp = await axios.post<ApiResponse>(`/${endpoint}`, body, {
       headers: {
@@ -82,17 +84,21 @@ export class Client {
   /**
    * Sends a batch of screenshots to be taken.
    *
+   * The images/pdfs will be returned in the same order they were listed in the request.
+   *
    * ```ts
-   * const resp = await client.screenshot('dyNmcmgxd4BFmuffdwCBV0', {
-   *    'splash-1': {
-   *      url: 'https://avagate.com/splash-1',
+   * const resp = await client.batchScreenshots('dyNmcmgxd4BFmuffdwCBV0', [
+   *    {
+   *      browser: 'chromium',
+   *      url: 'https://avagate.com',
    *      type: 'jpg',
    *    },
-   *    'splash-2': {
-   *      url: 'https://avagate.com/splash-2',
+   *    {
+   *      browser: 'firefox',
+   *      url: 'https://avagate.com',
    *      type: 'jpg',
    *    },
-   * });
+   * ]);
    * console.log(resp);
    *
    * // {
@@ -101,11 +107,11 @@ export class Client {
    * //   status: 'https://api.snapsites.io/status/7473bbe4-b2bf-4858-9a9c-476d302df5b9',
    * //   cost: -0.2,
    * //   balance: 1000,
-   * //   images: {
-   * //     'splash-1': 'https://api.snapsites.io/image/123.jpg',
-   * //     'splash-2': 'https://api.snapsites.io/image/456.jpg',
-   * //   },
-   * //   pdfs: {}
+   * //   images: [
+   * //     'https://api.snapsites.io/image/123.jpg',
+   * //     'https://api.snapsites.io/image/456.jpg',
+   * //   ],
+   * //   pdfs: []
    * // }
    * ```
    *
@@ -114,12 +120,12 @@ export class Client {
    */
   public batchScreenshots = async (
     endpoint: string,
-    req: BatchApiRequest,
+    req: ScrapeRequest[],
   ): Promise<BatchApiResponse> => {
-    const body: Record<string, any> = {};
-    Object.keys(req).forEach((key) => {
-      body[key] = { ...Client.defaultApiRequest, ...req[key] };
-    });
+    const body: ScrapeRequest[] = [];
+    for (let i = 0; i < req.length; i++) {
+      body.push({ ...Client.defaultApiRequest, ...req[i] });
+    }
 
     const resp = await axios.post<BatchApiResponse>(`/${endpoint}`, body, {
       headers: {
@@ -134,10 +140,10 @@ export class Client {
    * Gets the status of a request.
    *
    * @param endpoint The ID of the endpoint to use.
-   * @param id The ID of the request.
+   * @param apiRequest The ID of the request.
    */
-  public status = async (endpoint: string, id: string): Promise<ApiStatus> => {
-    const resp = await axios.get<ApiStatus>(`/${endpoint}/status/${id}`, {
+  public status = async (endpoint: string, apiRequest: string): Promise<ApiStatus> => {
+    const resp = await axios.get<ApiStatus>(`/${endpoint}/status/${apiRequest}`, {
       headers: {
         'X-Api-Secret': this.apiSecret,
       },
