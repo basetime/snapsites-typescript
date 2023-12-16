@@ -53,6 +53,24 @@ Outputs:
 }
 ```
 
+HTML can also be sent instead of a URL.
+
+```typescript
+import { Client } from '@basetime/snapsites-typescript';
+
+(async () => {
+    const apiSecret = '123';
+    const endpointId = 'dyNmcmgxd4BFmuffdwCBV0';
+
+    const client = new Client(apiSecret);
+    const resp = await client.screenshot(endpointId, {
+        browser: 'chromium',
+        html: '<!doctype html><html><body><h1>Hello World</h1></body></html>',
+        type: 'jpg',
+    });
+})();
+```
+
 ### batchScreenshots
 Use the `batchScreenshots` method to take multiple screenshots at once.
 
@@ -175,3 +193,38 @@ Outputs:
     }
 }
 ```
+
+### Waiting
+Normally, when a request is sent to the Snapsites API, it will wait until all the screenshots are finished before returning with a response. You can change this behavior by setting the `wait` parameter to `false`.
+
+```typescript
+import { Client } from '@basetime/snapsites-typescript';
+
+(async () => {
+    const apiSecret = '123';
+    const endpointId = 'dyNmcmgxd4BFmuffdwCBV0';
+    const wait = false;
+
+    const client = new Client(apiSecret);
+    const resp = await client.screenshot(endpointId, {
+        browser: 'chromium',
+        url: 'https://avagate.com',
+        type: 'jpg',
+    }, wait);
+})();
+```
+
+Response:
+```json
+{
+  "id": "1917c524-044d-456b-b7af-4397499dade8",
+  "time": 13085,
+  "cost": -0.1,
+  "balance": 9492.2,
+  "status": "http://api.snapsites.io/dyNmcmgxd4BFmuffdwCBV0/status/1917c524-044d-456b-b7af-4397499dade8"
+}
+```
+
+In this case, you poll the status endpoint to determine whether the request is done and to what percentage it is complete.
+
+

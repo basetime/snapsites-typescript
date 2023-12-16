@@ -52,10 +52,11 @@ class Client {
          *
          * @param endpoint The ID of the endpoint to use.
          * @param req The details of the page to screenshot.
+         * @param wait Whether to wait for the request to complete.
          */
-        this.screenshot = async (endpoint, req) => {
+        this.screenshot = async (endpoint, req, wait = true) => {
             const body = Object.assign(Object.assign({}, Client.defaultApiRequest), req);
-            const resp = await axios_1.default.post(`/${endpoint}`, body, {
+            const resp = await axios_1.default.post(`/${endpoint}?wait=${wait ? '1' : '0'}`, body, {
                 headers: {
                     'X-Api-Secret': this.apiSecret,
                 },
@@ -98,13 +99,14 @@ class Client {
          *
          * @param endpoint The ID of the endpoint to use.
          * @param req The details of the page to screenshot.
+         * @param wait Whether to wait for the request to complete.
          */
-        this.batchScreenshots = async (endpoint, req) => {
+        this.batchScreenshots = async (endpoint, req, wait = true) => {
             const body = [];
             for (let i = 0; i < req.length; i++) {
                 body.push(Object.assign(Object.assign({}, Client.defaultApiRequest), req[i]));
             }
-            const resp = await axios_1.default.post(`/${endpoint}`, body, {
+            const resp = await axios_1.default.post(`/${endpoint}?wait=${wait ? '1' : '0'}`, body, {
                 headers: {
                     'X-Api-Secret': this.apiSecret,
                 },

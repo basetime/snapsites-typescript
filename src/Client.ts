@@ -69,10 +69,15 @@ export class Client {
    *
    * @param endpoint The ID of the endpoint to use.
    * @param req The details of the page to screenshot.
+   * @param wait Whether to wait for the request to complete.
    */
-  public screenshot = async (endpoint: string, req: ScrapeRequest): Promise<ApiResponse> => {
+  public screenshot = async (
+    endpoint: string,
+    req: ScrapeRequest,
+    wait: boolean = true,
+  ): Promise<ApiResponse> => {
     const body = { ...Client.defaultApiRequest, ...req };
-    const resp = await axios.post<ApiResponse>(`/${endpoint}`, body, {
+    const resp = await axios.post<ApiResponse>(`/${endpoint}?wait=${wait ? '1' : '0'}`, body, {
       headers: {
         'X-Api-Secret': this.apiSecret,
       },
@@ -117,17 +122,19 @@ export class Client {
    *
    * @param endpoint The ID of the endpoint to use.
    * @param req The details of the page to screenshot.
+   * @param wait Whether to wait for the request to complete.
    */
   public batchScreenshots = async (
     endpoint: string,
     req: ScrapeRequest[],
+    wait: boolean = true,
   ): Promise<BatchApiResponse> => {
     const body: ScrapeRequest[] = [];
     for (let i = 0; i < req.length; i++) {
       body.push({ ...Client.defaultApiRequest, ...req[i] });
     }
 
-    const resp = await axios.post<BatchApiResponse>(`/${endpoint}`, body, {
+    const resp = await axios.post<BatchApiResponse>(`/${endpoint}?wait=${wait ? '1' : '0'}`, body, {
       headers: {
         'X-Api-Secret': this.apiSecret,
       },

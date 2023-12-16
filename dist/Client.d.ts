@@ -55,8 +55,9 @@ export declare class Client {
      *
      * @param endpoint The ID of the endpoint to use.
      * @param req The details of the page to screenshot.
+     * @param wait Whether to wait for the request to complete.
      */
-    screenshot: (endpoint: string, req: ScrapeRequest) => Promise<ApiResponse>;
+    screenshot: (endpoint: string, req: ScrapeRequest, wait?: boolean) => Promise<ApiResponse>;
     /**
      * Sends a batch of screenshots to be taken.
      *
@@ -93,8 +94,9 @@ export declare class Client {
      *
      * @param endpoint The ID of the endpoint to use.
      * @param req The details of the page to screenshot.
+     * @param wait Whether to wait for the request to complete.
      */
-    batchScreenshots: (endpoint: string, req: ScrapeRequest[]) => Promise<BatchApiResponse>;
+    batchScreenshots: (endpoint: string, req: ScrapeRequest[], wait?: boolean) => Promise<BatchApiResponse>;
     /**
      * Gets the status of a request.
      *
