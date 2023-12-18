@@ -9,6 +9,11 @@ export interface Beacon {
   message: string;
 
   /**
+   * The status of the job.
+   */
+  status: string;
+
+  /**
    * Optional additional data.
    */
   data?: any;
