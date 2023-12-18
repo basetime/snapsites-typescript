@@ -1,7 +1,7 @@
 import { Client } from './Client';
 
 (async () => {
-  const client = new Client('123');
+  const client = new Client('123', false);
   const resp = await client.batchScreenshots('dyNmcmgxd4BFmuffdwCBV0', [
     {
       url: 'https://avagate.com',
@@ -12,5 +12,12 @@ import { Client } from './Client';
       type: 'jpg',
     },
   ]);
+
+  /*const resp = await client.screenshot('dyNmcmgxd4BFmuffdwCBV0', {
+    url: 'https://avagate.com',
+    type: 'jpg',
+  });*/
   console.log(resp);
+
+  client.onBeacon(resp.beacon, (beacon) => console.log(beacon));
 })();

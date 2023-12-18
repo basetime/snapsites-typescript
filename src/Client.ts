@@ -1,7 +1,10 @@
 import axios from 'axios';
+import { Unsubscribe, onValue, ref } from 'firebase/database';
 import { ScrapeRequest } from './ApiRequest';
 import { ApiResponse, BatchApiResponse } from './ApiResponse';
 import { ApiStatus } from './ApiStatus';
+import { Beacon } from './Beacon';
+import { getRealtimeDatabase } from './firebase';
 
 axios.defaults.baseURL = 'http://dev-api.snapsites.io';
 
@@ -128,7 +131,7 @@ export class Client {
 
     return await this.doRequest<BatchApiResponse>(
       'POST',
-      `/${endpoint}/batch?wait=${this.wait ? '1' : '0'}`,
+      `/${endpoint}?wait=${this.wait ? '1' : '0'}`,
       body,
     );
   };
@@ -141,6 +144,20 @@ export class Client {
    */
   public status = async (endpoint: string, apiRequest: string): Promise<ApiStatus> => {
     return await this.doRequest('GET', `/${endpoint}/status/${apiRequest}`);
+  };
+
+  /**
+   * Listens for beacon updates.
+   *
+   * @param beaconUri The beacon URI to listen to.
+   * @param on The callback to call when the beacon is updated.
+   */
+  public onBeacon = (beaconUri: string, on: (beacon: Beacon) => void): Unsubscribe => {
+    const db = getRealtimeDatabase();
+    const beaconRef = ref(db, beaconUri);
+    return onValue(beaconRef, (snapshot) => {
+      on(snapshot.val() as Beacon);
+    });
   };
 
   /**

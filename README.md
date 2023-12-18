@@ -227,4 +227,58 @@ Response:
 
 In this case, you poll the status endpoint to determine whether the request is done and to what percentage it is complete.
 
+### Beacons
+As the API is processing it will emit status messages which are called beacons. Use `Client` to listen for status updates using the `onBeacon` method.
 
+```typescript
+import { Client } from '@basetime/snapsites-typescript';
+
+(async () => {
+    // In order to use beacons, be sure to set wait to false.
+    const apiSecret = '123';
+    const endpointId = 'dyNmcmgxd4BFmuffdwCBV0';
+    const wait = false;
+
+    const client = new Client(apiSecret, wait);
+    const resp = await client.screenshot(endpointId, {
+        browser: 'chromium',
+        url: 'https://avagate.com',
+        type: 'jpg',
+    });
+
+    // Listen for beacons.
+    client.onBeacon(resp.beacon, (beacon) => {
+        console.log(beacon);
+    });
+})();
+```
+
+Which will produce output similar to this.
+
+```
+[ { message: 'Starting', updatedAt: '2023-12-18T19:22:20.461Z' } ]
+[
+  {
+    message: 'Injecting script "https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js".',
+    updatedAt: '2023-12-18T19:22:21.251Z'
+  }
+]
+[
+  {
+    message: 'Applying watermark.',
+    updatedAt: '2023-12-18T19:22:29.006Z'
+  }
+]
+[
+  {
+    message: 'Uploading to Google Cloud Storage',
+    updatedAt: '2023-12-18T19:22:30.399Z'
+  }
+]
+[
+  {
+    message: 'Saved in bucket cdn_snapsites_io at https://storage.googleapis.com/cdn_snapsites_io/nfeEpyv6yT6nmsv3HVw8Qc.jpeg',
+    updatedAt: '2023-12-18T19:22:32.819Z'
+  }
+]
+```

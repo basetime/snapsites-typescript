@@ -17,6 +17,11 @@ export interface BatchApiResponse {
   status: string;
 
   /**
+   * Messages dispatched by the integration.
+   */
+  beacon: string;
+
+  /**
    * The cost of the request in centi-credits.
    */
   cost: number;
