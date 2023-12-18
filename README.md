@@ -205,12 +205,12 @@ import { Client } from '@basetime/snapsites-typescript';
     const endpointId = 'dyNmcmgxd4BFmuffdwCBV0';
     const wait = false;
 
-    const client = new Client(apiSecret);
+    const client = new Client(apiSecret, wait);
     const resp = await client.screenshot(endpointId, {
         browser: 'chromium',
         url: 'https://avagate.com',
         type: 'jpg',
-    }, wait);
+    });
 })();
 ```
 

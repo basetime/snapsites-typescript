@@ -10,11 +10,6 @@ axios.defaults.baseURL = 'http://dev-api.snapsites.io';
  */
 export class Client {
   /**
-   * The API secret created when the endpoint was created.
-   */
-  public apiSecret: string;
-
-  /**
    * The default request to use when making a request.
    */
   public static defaultApiRequest: Partial<ScrapeRequest> = {
@@ -28,10 +23,12 @@ export class Client {
    * Constructor
    *
    * @param apiSecret The API secret for the endpoint.
+   * @param wait Whether to wait for the request to complete.
    */
-  constructor(apiSecret: string) {
-    this.apiSecret = apiSecret;
-  }
+  constructor(
+    public readonly apiSecret: string,
+    public readonly wait: boolean = true,
+  ) {}
 
   /**
    * Takes a screenshot of a page.
@@ -48,6 +45,7 @@ export class Client {
    * //   id: '7473bbe4-b2bf-4858-9a9c-476d302df5b9',
    * //   time: 11094,
    * //   status: 'https://api.snapsites.io/status/7473bbe4-b2bf-4858-9a9c-476d302df5b9',
+   * //   errors: [],
    * //   cost: -0.2,
    * //   balance: 1000,
    * //   images: [
@@ -62,6 +60,7 @@ export class Client {
    *  - `id`: The unique id of the request.
    *  - `time`: Number of milliseconds it took to complete the request.
    *  - `status`: URL to poll in order to get the status of the request.
+   *  - `errors`: Any errors that occurred during the request.
    *  - `cost`: The cost of the request in credits.
    *  - `balance`: The remaining balance in credits.
    *  - `images`: The images generated during the request.
@@ -69,21 +68,15 @@ export class Client {
    *
    * @param endpoint The ID of the endpoint to use.
    * @param req The details of the page to screenshot.
-   * @param wait Whether to wait for the request to complete.
    */
-  public screenshot = async (
-    endpoint: string,
-    req: ScrapeRequest,
-    wait: boolean = true,
-  ): Promise<ApiResponse> => {
+  public screenshot = async (endpoint: string, req: ScrapeRequest): Promise<ApiResponse> => {
     const body = { ...Client.defaultApiRequest, ...req };
-    const resp = await axios.post<ApiResponse>(`/${endpoint}?wait=${wait ? '1' : '0'}`, body, {
-      headers: {
-        'X-Api-Secret': this.apiSecret,
-      },
-    });
 
-    return resp.data;
+    return await this.doRequest<ApiResponse>(
+      'POST',
+      `/${endpoint}?wait=${this.wait ? '1' : '0'}`,
+      body,
+    );
   };
 
   /**
@@ -110,6 +103,7 @@ export class Client {
    * //   id: '7473bbe4-b2bf-4858-9a9c-476d302df5b9',
    * //   time: 11094,
    * //   status: 'https://api.snapsites.io/status/7473bbe4-b2bf-4858-9a9c-476d302df5b9',
+   * //   errors: [],
    * //   cost: -0.2,
    * //   balance: 1000,
    * //   images: [
@@ -122,25 +116,21 @@ export class Client {
    *
    * @param endpoint The ID of the endpoint to use.
    * @param req The details of the page to screenshot.
-   * @param wait Whether to wait for the request to complete.
    */
   public batchScreenshots = async (
     endpoint: string,
     req: ScrapeRequest[],
-    wait: boolean = true,
   ): Promise<BatchApiResponse> => {
     const body: ScrapeRequest[] = [];
     for (let i = 0; i < req.length; i++) {
       body.push({ ...Client.defaultApiRequest, ...req[i] });
     }
 
-    const resp = await axios.post<BatchApiResponse>(`/${endpoint}?wait=${wait ? '1' : '0'}`, body, {
-      headers: {
-        'X-Api-Secret': this.apiSecret,
-      },
-    });
-
-    return resp.data;
+    return await this.doRequest<BatchApiResponse>(
+      'POST',
+      `/${endpoint}/batch?wait=${this.wait ? '1' : '0'}`,
+      body,
+    );
   };
 
   /**
@@ -150,11 +140,29 @@ export class Client {
    * @param apiRequest The ID of the request.
    */
   public status = async (endpoint: string, apiRequest: string): Promise<ApiStatus> => {
-    const resp = await axios.get<ApiStatus>(`/${endpoint}/status/${apiRequest}`, {
+    return await this.doRequest('GET', `/${endpoint}/status/${apiRequest}`);
+  };
+
+  /**
+   * Makes a request to the API.
+   *
+   * @param method The method to use.
+   * @param url The URL to request.
+   * @param body The body of the request.
+   */
+  private doRequest = async <T>(method: 'GET' | 'POST', url: string, body?: any): Promise<T> => {
+    const opts: any = {
+      method,
+      url,
       headers: {
         'X-Api-Secret': this.apiSecret,
       },
-    });
+    };
+    if (body) {
+      opts.data = body;
+    }
+
+    const resp = await axios.request<T>(opts);
 
     return resp.data;
   };
