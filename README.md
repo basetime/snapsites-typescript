@@ -131,8 +131,8 @@ import { Client } from '@basetime/snapsites-typescript';
 
     // When sending batch requests, a unique key is required for each scrape page.
     const client = new Client(apiSecret);
-    const resp = await client.batchScreenshots(endpointId, {
-        'google': {
+    const resp = await client.batchScreenshots(endpointId, [
+        {
             url: 'https://google.com',
             type: 'jpg',
             options: {
@@ -141,7 +141,7 @@ import { Client } from '@basetime/snapsites-typescript';
                 }
             }
         }
-    });
+    ]);
     console.log(resp);
 })();
 ```
@@ -158,8 +158,13 @@ import { Client } from '@basetime/snapsites-typescript';
     const requestId = '1917c524-044d-456b-b7af-4397499dade8';
 
     const client = new Client(apiSecret);
-    const resp = await client.status(endpointId, requestId);
-    console.log(resp);
+    const resp = await client.screenshot(endpointId, {
+        browser: 'chromium',
+        url: 'https://avagate.com',
+        type: 'jpg',
+    });
+    const status = await client.status(endpointId, resp.id);
+    console.log(status);
 })();
 ```
 
@@ -200,48 +205,13 @@ Outputs:
 }
 ```
 
-### Waiting
-Normally, when a request is sent to the Snapsites API, it will wait until all the screenshots are finished before returning with a response. You can change this behavior by setting the `wait` parameter to `false`.
-
-```typescript
-import { Client } from '@basetime/snapsites-typescript';
-
-(async () => {
-    const apiSecret = '123';
-    const endpointId = 'dyNmcmgxd4BFmuffdwCBV0';
-    const wait = false;
-
-    const client = new Client(apiSecret, wait);
-    const resp = await client.screenshot(endpointId, {
-        browser: 'chromium',
-        url: 'https://avagate.com',
-        type: 'jpg',
-    });
-})();
-```
-
-Response:
-```json
-{
-  "id": "1917c524-044d-456b-b7af-4397499dade8",
-  "time": 13085,
-  "cost": -0.1,
-  "balance": 9492.2,
-  "statusUri": "http://api.snapsites.io/dyNmcmgxd4BFmuffdwCBV0/status/1917c524-044d-456b-b7af-4397499dade8",
-  "beaconUri": "endpoints/dyNmcmgxd4BFmuffdwCBV0-8HcF7rATDipE4c5PCiL3q3-64zwGRCZindv5UXBXtc4fv",
-}
-```
-
-In this case, you poll the status endpoint to determine whether the request is done and to what percentage it is complete.
-
 ### Beacons
-As the API is processing it will emit status messages which are called beacons. Use `Client` to listen for status updates using the `onBeacon` method.
+Normally, when a request is sent to the Snapsites API, the client will wait until all the screenshots are finished before returning with a response. You can change this behavior by setting the `wait` parameter to `false`, and then use beacons to get real time updates.
 
 ```typescript
 import { Client } from '@basetime/snapsites-typescript';
 
 (async () => {
-    // In order to use beacons, be sure to set wait to false.
     const apiSecret = '123';
     const endpointId = 'dyNmcmgxd4BFmuffdwCBV0';
     const wait = false;
@@ -253,9 +223,11 @@ import { Client } from '@basetime/snapsites-typescript';
         type: 'jpg',
     });
 
-    // Listen for beacons.
-    client.onBeacon(resp.beaconUri, (beacon) => {
+    const unsubscribe = client.onBeacon(resp, (beacon) => {
         console.log(beacon);
+        if (beacon.status !== 'running') {
+            unsubscribe();
+        }
     });
 })();
 ```
@@ -267,25 +239,36 @@ Which will produce output similar to this.
 [
   {
     message: 'Injecting script "https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js".',
+    status: 'running',
     updatedAt: '2023-12-18T19:22:21.251Z'
   }
 ]
 [
   {
     message: 'Applying watermark.',
+    status: 'running',
     updatedAt: '2023-12-18T19:22:29.006Z'
   }
 ]
 [
   {
     message: 'Uploading to Google Cloud Storage',
+    status: 'running',
     updatedAt: '2023-12-18T19:22:30.399Z'
   }
 ]
 [
   {
     message: 'Saved in bucket cdn_snapsites_io at https://storage.googleapis.com/cdn_snapsites_io/nfeEpyv6yT6nmsv3HVw8Qc.jpeg',
+    status: 'running',
     updatedAt: '2023-12-18T19:22:32.819Z'
+  }
+]
+[
+  {
+    message: 'Finished.',
+    status: 'finished',
+    updatedAt: '2023-12-18T19:22:34.823Z'
   }
 ]
 ```

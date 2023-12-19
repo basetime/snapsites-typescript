@@ -1,7 +1,7 @@
 /**
- * Response returned to the client for batch requests.
+ * Response returned to the client when not waiting for the results.
  */
-export interface BatchApiResponse {
+export interface ApiResponseSimple {
   /**
    * The unique id of the request.
    *
@@ -38,9 +38,9 @@ export interface BatchApiResponse {
 }
 
 /**
- * Response returned to the client.
+ * Response returned to the client when waiting for the results.
  */
-export interface ApiResponse extends BatchApiResponse {
+export interface ApiResponse extends ApiResponseSimple {
   /**
    * The images generated during the ApiRequest.
    *

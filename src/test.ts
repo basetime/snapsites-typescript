@@ -19,5 +19,5 @@ import { Client } from './Client';
   });*/
   console.log(resp);
 
-  client.onBeacon(resp.beaconUri, (beacon) => console.log(beacon));
+  client.onBeacon(resp, (beacon) => console.log(beacon));
 })();
