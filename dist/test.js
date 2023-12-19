@@ -18,6 +18,6 @@ const Client_1 = require("./Client");
       type: 'jpg',
     });*/
     console.log(resp);
-    client.onBeacon(resp.beacon, (beacon) => console.log(beacon));
+    client.onBeacon(resp.beaconUri, (beacon) => console.log(beacon));
 })();
 //# sourceMappingURL=test.js.map

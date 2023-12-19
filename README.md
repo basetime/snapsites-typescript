@@ -45,11 +45,13 @@ Outputs:
   "time": 13085,
   "cost": -0.1,
   "balance": 9492.2,
-  "status": "http://api.snapsites.io/dyNmcmgxd4BFmuffdwCBV0/status/1917c524-044d-456b-b7af-4397499dade8",
+  "statusUri": "http://api.snapsites.io/dyNmcmgxd4BFmuffdwCBV0/status/1917c524-044d-456b-b7af-4397499dade8",
+  "beaconUri": "endpoints/dyNmcmgxd4BFmuffdwCBV0-8HcF7rATDipE4c5PCiL3q3-64zwGRCZindv5UXBXtc4fv",
   "images": [
     "https://storage.googleapis.com/cdn_snapsites_io/rhsV7rpKEyb6Ng1KxiDupA.jpeg"
   ],
-  "pdfs": []
+  "pdfs": [],
+  "results": []
 }
 ```
 
@@ -107,12 +109,14 @@ Outputs:
   "time": 13085,
   "cost": -0.1,
   "balance": 9492.2,
-  "status": "http://api.snapsites.io/dyNmcmgxd4BFmuffdwCBV0/status/1917c524-044d-456b-b7af-4397499dade8",
+  "statusUri": "http://api.snapsites.io/dyNmcmgxd4BFmuffdwCBV0/status/1917c524-044d-456b-b7af-4397499dade8",
+  "beaconUri": "endpoints/dyNmcmgxd4BFmuffdwCBV0-8HcF7rATDipE4c5PCiL3q3-64zwGRCZindv5UXBXtc4fv",
   "images": [
     "https://storage.googleapis.com/cdn_snapsites_io/rhsV7rpKEyb6Ng1KxiDup3.jpeg",
     "https://storage.googleapis.com/cdn_snapsites_io/5hs56rpKEyb6Ng1KxiDupA.jpeg"
   ],
-  "pdfs": []
+  "pdfs": [],
+  "results": []
 }
 ```
 
@@ -165,6 +169,7 @@ Outputs:
 {
     "id": "bffd4858-16fd-4c6a-827c-a312782ddb22",
     "status": "success",
+    "beaconUri": "endpoints/dyNmcmgxd4BFmuffdwCBV0-8HcF7rATDipE4c5PCiL3q3-64zwGRCZindv5UXBXtc4fv",
     "currentStep": 4,
     "totalSteps": 4,
     "cost": -0.2,
@@ -181,6 +186,7 @@ Outputs:
         "[2023-12-13T02:15:29.822Z] debug: Injected internal script.",
         "[2023-12-13T02:15:43.504Z] debug: Saved in bucket cdn_snapsites_io at https://storage.googleapis.com/cdn_snapsites_io/vzmbLxv7vp6vkqnhcD1995.jpeg"
     ],
+    "results": [],
     "request": {
         "first": {
             "url": "https://avagate.com",
@@ -221,7 +227,8 @@ Response:
   "time": 13085,
   "cost": -0.1,
   "balance": 9492.2,
-  "status": "http://api.snapsites.io/dyNmcmgxd4BFmuffdwCBV0/status/1917c524-044d-456b-b7af-4397499dade8"
+  "statusUri": "http://api.snapsites.io/dyNmcmgxd4BFmuffdwCBV0/status/1917c524-044d-456b-b7af-4397499dade8",
+  "beaconUri": "endpoints/dyNmcmgxd4BFmuffdwCBV0-8HcF7rATDipE4c5PCiL3q3-64zwGRCZindv5UXBXtc4fv",
 }
 ```
 
@@ -247,7 +254,7 @@ import { Client } from '@basetime/snapsites-typescript';
     });
 
     // Listen for beacons.
-    client.onBeacon(resp.beacon, (beacon) => {
+    client.onBeacon(resp.beaconUri, (beacon) => {
         console.log(beacon);
     });
 })();
