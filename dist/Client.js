@@ -79,6 +79,16 @@ class Client {
             return await this.doRequest('GET', `/${endpoint}/status/${apiRequest}`);
         };
         /**
+         * Returns the status of all ApiRequests for an endpoint.
+         *
+         * @param endpoint The ID of the endpoint to use.
+         * @param limit The maximum number of requests to return.
+         * @param offset The offset to start at.
+         */
+        this.statusAll = async (endpoint, limit = 25, offset = 0) => {
+            return await this.doRequest('GET', `/${endpoint}/status?limit=${limit}&offset=${offset}`);
+        };
+        /**
          * Listens for beacon updates.
          *
          * ```ts
