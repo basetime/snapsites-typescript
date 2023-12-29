@@ -3,13 +3,10 @@ Snapsites Typescript
 Typescript client library for using Snapsites.io.
 
 ## Installation
-Add the GitHub path to your `package.json` file.
-```json
-{
-    "dependencies": {
-        "@basetime/snapsites-typescript": "git@github.com:basetime/snapsites-typescript.git"
-    }
-}
+Add the package to your project.
+
+```sh
+yarn add @basetime/snapsites-typescript
 ```
 
 And then run `pnpm install`.
