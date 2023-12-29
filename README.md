@@ -237,6 +237,8 @@ Which will produce output similar to this.
   {
     message: 'Injecting script "https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js".',
     status: 'running',
+    totalSteps: 3,
+    currentStep: 1,
     updatedAt: '2023-12-18T19:22:21.251Z'
   }
 ]
@@ -244,6 +246,8 @@ Which will produce output similar to this.
   {
     message: 'Applying watermark.',
     status: 'running',
+    totalSteps: 3,
+    currentStep: 2,
     updatedAt: '2023-12-18T19:22:29.006Z'
   }
 ]
@@ -251,6 +255,8 @@ Which will produce output similar to this.
   {
     message: 'Uploading to Google Cloud Storage',
     status: 'running',
+    totalSteps: 3,
+    currentStep: 3,
     updatedAt: '2023-12-18T19:22:30.399Z'
   }
 ]
@@ -258,6 +264,8 @@ Which will produce output similar to this.
   {
     message: 'Saved in bucket cdn_snapsites_io at https://storage.googleapis.com/cdn_snapsites_io/nfeEpyv6yT6nmsv3HVw8Qc.jpeg',
     status: 'running',
+    totalSteps: 3,
+    currentStep: 3,
     updatedAt: '2023-12-18T19:22:32.819Z'
   }
 ]
@@ -265,6 +273,8 @@ Which will produce output similar to this.
   {
     message: 'Finished.',
     status: 'finished',
+    totalSteps: 3,
+    currentStep: 3,
     updatedAt: '2023-12-18T19:22:34.823Z'
   }
 ]

@@ -107,6 +107,21 @@ export class Client {
   };
 
   /**
+   * Returns the status of all ApiRequests for an endpoint.
+   *
+   * @param endpoint The ID of the endpoint to use.
+   * @param limit The maximum number of requests to return.
+   * @param offset The offset to start at.
+   */
+  public statusAll = async (
+    endpoint: string,
+    limit = 25,
+    offset = 0,
+  ): Promise<Omit<ApiStatus, 'logs' | 'request'>[]> => {
+    return await this.doRequest('GET', `/${endpoint}/status?limit=${limit}&offset=${offset}`);
+  };
+
+  /**
    * Listens for beacon updates.
    *
    * ```ts
