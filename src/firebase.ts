@@ -23,7 +23,7 @@ export const getFirebaseApp = () => {
       appId,
     };
     if (process.env.NODE_ENV === 'development') {
-      config.databaseURL = `http://localhost:9000?ns=${projectId}`;
+      config.databaseURL = `http://localhost:9100?ns=${projectId}`;
     }
     app = initializeApp(config);
   }

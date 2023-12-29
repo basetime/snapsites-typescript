@@ -130,12 +130,12 @@ export class Client {
    */
   public onBeacon = (
     beaconUri: string | { beaconUri: string },
-    on: (beacon: Beacon) => void,
+    on: (beacons: Beacon[]) => void,
   ): Unsubscribe => {
     const db = getRealtimeDatabase();
     const beaconRef = ref(db, typeof beaconUri === 'string' ? beaconUri : beaconUri.beaconUri);
     return onValue(beaconRef, (snapshot) => {
-      on(snapshot.val() as Beacon);
+      on(snapshot.val() as Beacon[]);
     });
   };
 

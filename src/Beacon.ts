@@ -25,6 +25,19 @@ export interface Beacon {
   status: string;
 
   /**
+   * The total number of steps in the entire api request.
+   *
+   * The number of steps required to complete the api request is calculated when the
+   * request is made. This can be used along with `currentStep` to show a progress bar.
+   */
+  totalSteps: number;
+
+  /**
+   * The current step in the api request.
+   */
+  currentStep: number;
+
+  /**
    * Optional additional data.
    *
    * Any other value that the integration wants to send to the api consumer.
