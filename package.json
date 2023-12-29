@@ -1,6 +1,6 @@
 {
   "name": "@basetime/snapsites-typescript",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Typescript client library for using Snapsites.io.",
   "main": "dist/index.js",
   "scripts": {
