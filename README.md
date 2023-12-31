@@ -25,7 +25,7 @@ import { Client } from '@basetime/snapsites-typescript';
     const endpointId = 'dyNmcmgxd4BFmuffdwCBV0';
 
     const client = new Client(apiSecret);
-    const resp = await client.screenshot(endpointId, {
+    const resp = await client.screenshotWait(endpointId, {
         browser: 'chromium',
         url: 'https://avagate.com',
         type: 'jpg',
@@ -71,7 +71,7 @@ import { Client } from '@basetime/snapsites-typescript';
 ```
 
 ### batchScreenshots
-Use the `batchScreenshots` method to take multiple screenshots at once.
+Use the `batchScreenshotsWatch` method to take multiple screenshots at once.
 
 ```typescript
 import { Client } from '@basetime/snapsites-typescript';
@@ -82,7 +82,7 @@ import { Client } from '@basetime/snapsites-typescript';
 
     // When sending batch requests, a unique key is required for each scrape page.
     const client = new Client(apiSecret);
-    const resp = await client.batchScreenshots(endpointId, [
+    const resp = await client.batchScreenshotsWait(endpointId, [
         {
             browser: 'chromium',
             url: 'https://avagate.com',
@@ -128,7 +128,7 @@ import { Client } from '@basetime/snapsites-typescript';
 
     // When sending batch requests, a unique key is required for each scrape page.
     const client = new Client(apiSecret);
-    const resp = await client.batchScreenshots(endpointId, [
+    const resp = await client.batchScreenshotsWait(endpointId, [
         {
             url: 'https://google.com',
             type: 'jpg',
@@ -155,7 +155,7 @@ import { Client } from '@basetime/snapsites-typescript';
     const requestId = '1917c524-044d-456b-b7af-4397499dade8';
 
     const client = new Client(apiSecret);
-    const resp = await client.screenshot(endpointId, {
+    const resp = await client.screenshotWait(endpointId, {
         browser: 'chromium',
         url: 'https://avagate.com',
         type: 'jpg',
@@ -211,9 +211,8 @@ import { Client } from '@basetime/snapsites-typescript';
 (async () => {
     const apiSecret = '123';
     const endpointId = 'dyNmcmgxd4BFmuffdwCBV0';
-    const wait = false;
 
-    const client = new Client(apiSecret, wait);
+    const client = new Client(apiSecret);
     const resp = await client.screenshot(endpointId, {
         browser: 'chromium',
         url: 'https://avagate.com',
@@ -278,4 +277,22 @@ Which will produce output similar to this.
     updatedAt: '2023-12-18T19:22:34.823Z'
   }
 ]
+```
+
+### Metadata
+Metadata is a way to store arbitrary data with a screenshot request. Status updates and beacons will include the metadata. Clients can use the metadata to store information about the request, such as a database ID.
+
+```typescript
+(async () => {
+    const apiSecret = '123';
+    const endpointId = 'dyNmcmgxd4BFmuffdwCBV0';
+
+    const client = new Client(apiSecret);
+    const resp = await client.screenshot(endpointId, {
+        browser: 'chromium',
+        url: 'https://avagate.com',
+        type: 'jpg',
+        meta: '123',
+    });
+})();
 ```

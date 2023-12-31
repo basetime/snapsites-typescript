@@ -16,11 +16,9 @@ class Client {
      * Constructor
      *
      * @param apiSecret The API secret for the endpoint.
-     * @param wait Whether to wait for the request to complete.
      */
-    constructor(apiSecret, wait = true) {
+    constructor(apiSecret) {
         this.apiSecret = apiSecret;
-        this.wait = wait;
         /**
          * Takes a screenshot of a page.
          *
@@ -37,7 +35,18 @@ class Client {
          */
         this.screenshot = async (endpoint, req) => {
             const body = Object.assign(Object.assign({}, Client.defaultApiRequest), req);
-            return await this.doRequest('POST', `/${endpoint}?wait=${this.wait ? '1' : '0'}`, body);
+            return await this.doRequest('POST', `/${endpoint}?wait=0`, body);
+        };
+        /**
+         * Sends a screenshot request to snapsites and waits for snapsites to finish generating
+         * the screenshots before returning.
+         *
+         * @param endpoint The ID of the endpoint to use.
+         * @param req The details of the page to screenshot.
+         */
+        this.screenshotWait = async (endpoint, req) => {
+            const body = Object.assign(Object.assign({}, Client.defaultApiRequest), req);
+            return await this.doRequest('POST', `/${endpoint}?wait=1`, body);
         };
         /**
          * Sends a batch of screenshots to be taken.
@@ -67,7 +76,21 @@ class Client {
             for (let i = 0; i < req.length; i++) {
                 body.push(Object.assign(Object.assign({}, Client.defaultApiRequest), req[i]));
             }
-            return await this.doRequest('POST', `/${endpoint}?wait=${this.wait ? '1' : '0'}`, body);
+            return await this.doRequest('POST', `/${endpoint}?wait=0`, body);
+        };
+        /**
+         * Sends a batch of screenshots to be taken and waits for snapsites to finish generating
+         * the screenshots before returning.
+         *
+         * @param endpoint The ID of the endpoint to use.
+         * @param req The details of the page to screenshot.
+         */
+        this.batchScreenshotsWait = async (endpoint, req) => {
+            const body = [];
+            for (let i = 0; i < req.length; i++) {
+                body.push(Object.assign(Object.assign({}, Client.defaultApiRequest), req[i]));
+            }
+            return await this.doRequest('POST', `/${endpoint}?wait=1`, body);
         };
         /**
          * Gets the status of a request.
@@ -149,5 +172,6 @@ Client.defaultApiRequest = {
     url: '',
     html: '',
     type: 'jpg',
+    meta: '',
 };
 //# sourceMappingURL=Client.js.map

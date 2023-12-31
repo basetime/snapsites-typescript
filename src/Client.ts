@@ -20,18 +20,15 @@ export class Client {
     url: '',
     html: '',
     type: 'jpg',
+    meta: '',
   };
 
   /**
    * Constructor
    *
    * @param apiSecret The API secret for the endpoint.
-   * @param wait Whether to wait for the request to complete.
    */
-  constructor(
-    public readonly apiSecret: string,
-    public readonly wait: boolean = true,
-  ) {}
+  constructor(public readonly apiSecret: string) {}
 
   /**
    * Takes a screenshot of a page.
@@ -50,11 +47,20 @@ export class Client {
   public screenshot = async (endpoint: string, req: ScrapeRequest): Promise<ApiResponse> => {
     const body = { ...Client.defaultApiRequest, ...req };
 
-    return await this.doRequest<ApiResponse>(
-      'POST',
-      `/${endpoint}?wait=${this.wait ? '1' : '0'}`,
-      body,
-    );
+    return await this.doRequest<ApiResponse>('POST', `/${endpoint}?wait=0`, body);
+  };
+
+  /**
+   * Sends a screenshot request to snapsites and waits for snapsites to finish generating
+   * the screenshots before returning.
+   *
+   * @param endpoint The ID of the endpoint to use.
+   * @param req The details of the page to screenshot.
+   */
+  public screenshotWait = async (endpoint: string, req: ScrapeRequest): Promise<ApiResponse> => {
+    const body = { ...Client.defaultApiRequest, ...req };
+
+    return await this.doRequest<ApiResponse>('POST', `/${endpoint}?wait=1`, body);
   };
 
   /**
@@ -89,11 +95,26 @@ export class Client {
       body.push({ ...Client.defaultApiRequest, ...req[i] });
     }
 
-    return await this.doRequest<ApiResponseSimple>(
-      'POST',
-      `/${endpoint}?wait=${this.wait ? '1' : '0'}`,
-      body,
-    );
+    return await this.doRequest<ApiResponseSimple>('POST', `/${endpoint}?wait=0`, body);
+  };
+
+  /**
+   * Sends a batch of screenshots to be taken and waits for snapsites to finish generating
+   * the screenshots before returning.
+   *
+   * @param endpoint The ID of the endpoint to use.
+   * @param req The details of the page to screenshot.
+   */
+  public batchScreenshotsWait = async (
+    endpoint: string,
+    req: ScrapeRequest[],
+  ): Promise<ApiResponseSimple> => {
+    const body: ScrapeRequest[] = [];
+    for (let i = 0; i < req.length; i++) {
+      body.push({ ...Client.defaultApiRequest, ...req[i] });
+    }
+
+    return await this.doRequest<ApiResponseSimple>('POST', `/${endpoint}?wait=1`, body);
   };
 
   /**

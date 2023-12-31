@@ -1,7 +1,7 @@
 import { Client } from './Client';
 
 (async () => {
-  const client = new Client('123', false);
+  const client = new Client('123');
   const resp = await client.batchScreenshots('dyNmcmgxd4BFmuffdwCBV0', [
     {
       url: 'https://avagate.com',

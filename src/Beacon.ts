@@ -45,6 +45,14 @@ export interface Beacon {
   data?: any;
 
   /**
+   * User supplied metadata that will be a part of the api status.
+   *
+   * Used by clients to pass along a unique value that they need to associate with the request. They
+   * can then find this value in the status response.
+   */
+  meta?: string;
+
+  /**
    * The timestamp of when the beacon was updated.
    */
   updatedAt: string;

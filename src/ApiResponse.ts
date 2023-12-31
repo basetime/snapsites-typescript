@@ -67,4 +67,12 @@ export interface ApiResponse extends ApiResponseSimple {
    * that the integrations were run.
    */
   results?: any[];
+
+  /**
+   * User supplied metadata that will be a part of the api status.
+   *
+   * Used by clients to pass along a unique value that they need to associate with the request. They
+   * can then find this value in the status response.
+   */
+  meta?: string;
 }
