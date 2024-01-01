@@ -2,8 +2,8 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const Client_1 = require("./Client");
 (async () => {
-    const client = new Client_1.Client('123');
-    const resp = await client.batchScreenshots('dyNmcmgxd4BFmuffdwCBV0', [
+    const client = new Client_1.Client();
+    const resp = await client.batchScreenshots('dyNmcmgxd4BFmuffdwCBV0', '123', [
         {
             url: 'https://avagate.com',
             type: 'jpg',
@@ -13,7 +13,7 @@ const Client_1 = require("./Client");
             type: 'jpg',
         },
     ]);
-    /*const resp = await client.screenshot('dyNmcmgxd4BFmuffdwCBV0', {
+    /*const resp = await client.screenshot('dyNmcmgxd4BFmuffdwCBV0', '123', {
       url: 'https://avagate.com',
       type: 'jpg',
     });*/

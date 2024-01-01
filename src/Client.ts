@@ -24,17 +24,10 @@ export class Client {
   };
 
   /**
-   * Constructor
-   *
-   * @param apiSecret The API secret for the endpoint.
-   */
-  constructor(public readonly apiSecret: string) {}
-
-  /**
    * Takes a screenshot of a page.
    *
    * ```ts
-   * const resp = await client.screenshot('dyNmcmgxd4BFmuffdwCBV0', {
+   * const resp = await client.screenshot('dyNmcmgxd4BFmuffdwCBV0', '123', {
    *    browser: 'chromium',
    *    url: 'https://avagate.com',
    *    type: 'jpg',
@@ -42,12 +35,17 @@ export class Client {
    * ```
    *
    * @param endpoint The ID of the endpoint to use.
+   * @param apiSecret The API secret for the endpoint.
    * @param req The details of the page to screenshot.
    */
-  public screenshot = async (endpoint: string, req: ScrapeRequest): Promise<ApiResponse> => {
+  public screenshot = async (
+    endpoint: string,
+    apiSecret: string,
+    req: ScrapeRequest,
+  ): Promise<ApiResponse> => {
     const body = { ...Client.defaultApiRequest, ...req };
 
-    return await this.doRequest<ApiResponse>('POST', `/${endpoint}?wait=0`, body);
+    return await this.doRequest<ApiResponse>('POST', `/${endpoint}?wait=0`, apiSecret, body);
   };
 
   /**
@@ -55,12 +53,17 @@ export class Client {
    * the screenshots before returning.
    *
    * @param endpoint The ID of the endpoint to use.
+   * @param apiSecret The API secret for the endpoint.
    * @param req The details of the page to screenshot.
    */
-  public screenshotWait = async (endpoint: string, req: ScrapeRequest): Promise<ApiResponse> => {
+  public screenshotWait = async (
+    endpoint: string,
+    apiSecret: string,
+    req: ScrapeRequest,
+  ): Promise<ApiResponse> => {
     const body = { ...Client.defaultApiRequest, ...req };
 
-    return await this.doRequest<ApiResponse>('POST', `/${endpoint}?wait=1`, body);
+    return await this.doRequest<ApiResponse>('POST', `/${endpoint}?wait=1`, apiSecret, body);
   };
 
   /**
@@ -69,7 +72,7 @@ export class Client {
    * The images/pdfs will be returned in the same order they were listed in the request.
    *
    * ```ts
-   * const resp = await client.batchScreenshots('dyNmcmgxd4BFmuffdwCBV0', [
+   * const resp = await client.batchScreenshots('dyNmcmgxd4BFmuffdwCBV0', '123', [
    *    {
    *      browser: 'chromium',
    *      url: 'https://avagate.com',
@@ -84,10 +87,12 @@ export class Client {
    * ```
    *
    * @param endpoint The ID of the endpoint to use.
+   * @param apiSecret The API secret for the endpoint.
    * @param req The details of the page to screenshot.
    */
   public batchScreenshots = async (
     endpoint: string,
+    apiSecret: string,
     req: ScrapeRequest[],
   ): Promise<ApiResponseSimple> => {
     const body: ScrapeRequest[] = [];
@@ -95,7 +100,7 @@ export class Client {
       body.push({ ...Client.defaultApiRequest, ...req[i] });
     }
 
-    return await this.doRequest<ApiResponseSimple>('POST', `/${endpoint}?wait=0`, body);
+    return await this.doRequest<ApiResponseSimple>('POST', `/${endpoint}?wait=0`, apiSecret, body);
   };
 
   /**
@@ -103,10 +108,12 @@ export class Client {
    * the screenshots before returning.
    *
    * @param endpoint The ID of the endpoint to use.
+   * @param apiSecret The API secret for the endpoint.
    * @param req The details of the page to screenshot.
    */
   public batchScreenshotsWait = async (
     endpoint: string,
+    apiSecret: string,
     req: ScrapeRequest[],
   ): Promise<ApiResponseSimple> => {
     const body: ScrapeRequest[] = [];
@@ -114,40 +121,51 @@ export class Client {
       body.push({ ...Client.defaultApiRequest, ...req[i] });
     }
 
-    return await this.doRequest<ApiResponseSimple>('POST', `/${endpoint}?wait=1`, body);
+    return await this.doRequest<ApiResponseSimple>('POST', `/${endpoint}?wait=1`, apiSecret, body);
   };
 
   /**
    * Gets the status of a request.
    *
    * @param endpoint The ID of the endpoint to use.
+   * @param apiSecret The API secret for the endpoint.
    * @param apiRequest The ID of the request.
    */
-  public status = async (endpoint: string, apiRequest: string): Promise<ApiStatus> => {
-    return await this.doRequest('GET', `/${endpoint}/status/${apiRequest}`);
+  public status = async (
+    endpoint: string,
+    apiSecret: string,
+    apiRequest: string,
+  ): Promise<ApiStatus> => {
+    return await this.doRequest('GET', `/${endpoint}/status/${apiRequest}`, apiSecret);
   };
 
   /**
    * Returns the status of all ApiRequests for an endpoint.
    *
    * @param endpoint The ID of the endpoint to use.
+   * @param apiSecret The API secret for the endpoint.
    * @param limit The maximum number of requests to return.
    * @param offset The offset to start at.
    */
   public statusAll = async (
     endpoint: string,
+    apiSecret: string,
     limit = 25,
     offset = 0,
   ): Promise<Omit<ApiStatus, 'logs' | 'request'>[]> => {
-    return await this.doRequest('GET', `/${endpoint}/status?limit=${limit}&offset=${offset}`);
+    return await this.doRequest(
+      'GET',
+      `/${endpoint}/status?limit=${limit}&offset=${offset}`,
+      apiSecret,
+    );
   };
 
   /**
    * Listens for beacon updates.
    *
    * ```ts
-   * const client = new Client(apiSecret, false);
-   * const resp = await client.screenshot(endpointId, {
+   * const client = new Client();
+   * const resp = await client.screenshot(endpointId, '123', {
    *     browser: 'chromium',
    *     url: 'https://avagate.com',
    *     type: 'jpg',
@@ -180,14 +198,20 @@ export class Client {
    *
    * @param method The method to use.
    * @param url The URL to request.
+   * @param apiSecret The API secret for the endpoint.
    * @param body The body of the request.
    */
-  private doRequest = async <T>(method: 'GET' | 'POST', url: string, body?: any): Promise<T> => {
+  private doRequest = async <T>(
+    method: 'GET' | 'POST',
+    url: string,
+    apiSecret: string,
+    body?: any,
+  ): Promise<T> => {
     const opts: any = {
       method,
       url,
       headers: {
-        'X-Api-Secret': this.apiSecret,
+        'X-Api-Secret': apiSecret,
       },
     };
     if (body) {

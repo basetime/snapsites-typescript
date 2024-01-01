@@ -12,18 +12,12 @@ axios_1.default.defaults.baseURL = 'http://dev-api.snapsites.io';
  * Client library that communicates with the Snapsites API.
  */
 class Client {
-    /**
-     * Constructor
-     *
-     * @param apiSecret The API secret for the endpoint.
-     */
-    constructor(apiSecret) {
-        this.apiSecret = apiSecret;
+    constructor() {
         /**
          * Takes a screenshot of a page.
          *
          * ```ts
-         * const resp = await client.screenshot('dyNmcmgxd4BFmuffdwCBV0', {
+         * const resp = await client.screenshot('dyNmcmgxd4BFmuffdwCBV0', '123', {
          *    browser: 'chromium',
          *    url: 'https://avagate.com',
          *    type: 'jpg',
@@ -31,22 +25,24 @@ class Client {
          * ```
          *
          * @param endpoint The ID of the endpoint to use.
+         * @param apiSecret The API secret for the endpoint.
          * @param req The details of the page to screenshot.
          */
-        this.screenshot = async (endpoint, req) => {
+        this.screenshot = async (endpoint, apiSecret, req) => {
             const body = Object.assign(Object.assign({}, Client.defaultApiRequest), req);
-            return await this.doRequest('POST', `/${endpoint}?wait=0`, body);
+            return await this.doRequest('POST', `/${endpoint}?wait=0`, apiSecret, body);
         };
         /**
          * Sends a screenshot request to snapsites and waits for snapsites to finish generating
          * the screenshots before returning.
          *
          * @param endpoint The ID of the endpoint to use.
+         * @param apiSecret The API secret for the endpoint.
          * @param req The details of the page to screenshot.
          */
-        this.screenshotWait = async (endpoint, req) => {
+        this.screenshotWait = async (endpoint, apiSecret, req) => {
             const body = Object.assign(Object.assign({}, Client.defaultApiRequest), req);
-            return await this.doRequest('POST', `/${endpoint}?wait=1`, body);
+            return await this.doRequest('POST', `/${endpoint}?wait=1`, apiSecret, body);
         };
         /**
          * Sends a batch of screenshots to be taken.
@@ -54,7 +50,7 @@ class Client {
          * The images/pdfs will be returned in the same order they were listed in the request.
          *
          * ```ts
-         * const resp = await client.batchScreenshots('dyNmcmgxd4BFmuffdwCBV0', [
+         * const resp = await client.batchScreenshots('dyNmcmgxd4BFmuffdwCBV0', '123', [
          *    {
          *      browser: 'chromium',
          *      url: 'https://avagate.com',
@@ -69,54 +65,58 @@ class Client {
          * ```
          *
          * @param endpoint The ID of the endpoint to use.
+         * @param apiSecret The API secret for the endpoint.
          * @param req The details of the page to screenshot.
          */
-        this.batchScreenshots = async (endpoint, req) => {
+        this.batchScreenshots = async (endpoint, apiSecret, req) => {
             const body = [];
             for (let i = 0; i < req.length; i++) {
                 body.push(Object.assign(Object.assign({}, Client.defaultApiRequest), req[i]));
             }
-            return await this.doRequest('POST', `/${endpoint}?wait=0`, body);
+            return await this.doRequest('POST', `/${endpoint}?wait=0`, apiSecret, body);
         };
         /**
          * Sends a batch of screenshots to be taken and waits for snapsites to finish generating
          * the screenshots before returning.
          *
          * @param endpoint The ID of the endpoint to use.
+         * @param apiSecret The API secret for the endpoint.
          * @param req The details of the page to screenshot.
          */
-        this.batchScreenshotsWait = async (endpoint, req) => {
+        this.batchScreenshotsWait = async (endpoint, apiSecret, req) => {
             const body = [];
             for (let i = 0; i < req.length; i++) {
                 body.push(Object.assign(Object.assign({}, Client.defaultApiRequest), req[i]));
             }
-            return await this.doRequest('POST', `/${endpoint}?wait=1`, body);
+            return await this.doRequest('POST', `/${endpoint}?wait=1`, apiSecret, body);
         };
         /**
          * Gets the status of a request.
          *
          * @param endpoint The ID of the endpoint to use.
+         * @param apiSecret The API secret for the endpoint.
          * @param apiRequest The ID of the request.
          */
-        this.status = async (endpoint, apiRequest) => {
-            return await this.doRequest('GET', `/${endpoint}/status/${apiRequest}`);
+        this.status = async (endpoint, apiSecret, apiRequest) => {
+            return await this.doRequest('GET', `/${endpoint}/status/${apiRequest}`, apiSecret);
         };
         /**
          * Returns the status of all ApiRequests for an endpoint.
          *
          * @param endpoint The ID of the endpoint to use.
+         * @param apiSecret The API secret for the endpoint.
          * @param limit The maximum number of requests to return.
          * @param offset The offset to start at.
          */
-        this.statusAll = async (endpoint, limit = 25, offset = 0) => {
-            return await this.doRequest('GET', `/${endpoint}/status?limit=${limit}&offset=${offset}`);
+        this.statusAll = async (endpoint, apiSecret, limit = 25, offset = 0) => {
+            return await this.doRequest('GET', `/${endpoint}/status?limit=${limit}&offset=${offset}`, apiSecret);
         };
         /**
          * Listens for beacon updates.
          *
          * ```ts
-         * const client = new Client(apiSecret, false);
-         * const resp = await client.screenshot(endpointId, {
+         * const client = new Client();
+         * const resp = await client.screenshot(endpointId, '123', {
          *     browser: 'chromium',
          *     url: 'https://avagate.com',
          *     type: 'jpg',
@@ -145,14 +145,15 @@ class Client {
          *
          * @param method The method to use.
          * @param url The URL to request.
+         * @param apiSecret The API secret for the endpoint.
          * @param body The body of the request.
          */
-        this.doRequest = async (method, url, body) => {
+        this.doRequest = async (method, url, apiSecret, body) => {
             const opts = {
                 method,
                 url,
                 headers: {
-                    'X-Api-Secret': this.apiSecret,
+                    'X-Api-Secret': apiSecret,
                 },
             };
             if (body) {

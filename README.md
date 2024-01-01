@@ -24,8 +24,8 @@ import { Client } from '@basetime/snapsites-typescript';
     const apiSecret = '123';
     const endpointId = 'dyNmcmgxd4BFmuffdwCBV0';
 
-    const client = new Client(apiSecret);
-    const resp = await client.screenshotWait(endpointId, {
+    const client = new Client();
+    const resp = await client.screenshotWait(endpointId, apiSecret, {
         browser: 'chromium',
         url: 'https://avagate.com',
         type: 'jpg',
@@ -61,8 +61,8 @@ import { Client } from '@basetime/snapsites-typescript';
     const apiSecret = '123';
     const endpointId = 'dyNmcmgxd4BFmuffdwCBV0';
 
-    const client = new Client(apiSecret);
-    const resp = await client.screenshot(endpointId, {
+    const client = new Client();
+    const resp = await client.screenshot(endpointId, apiSecret, {
         browser: 'chromium',
         html: '<!doctype html><html><body><h1>Hello World</h1></body></html>',
         type: 'jpg',
@@ -81,8 +81,8 @@ import { Client } from '@basetime/snapsites-typescript';
     const endpointId = 'dyNmcmgxd4BFmuffdwCBV0';
 
     // When sending batch requests, a unique key is required for each scrape page.
-    const client = new Client(apiSecret);
-    const resp = await client.batchScreenshotsWait(endpointId, [
+    const client = new Client();
+    const resp = await client.batchScreenshotsWait(endpointId, apiSecret, [
         {
             browser: 'chromium',
             url: 'https://avagate.com',
@@ -127,8 +127,8 @@ import { Client } from '@basetime/snapsites-typescript';
     const endpointId = 'dyNmcmgxd4BFmuffdwCBV0';
 
     // When sending batch requests, a unique key is required for each scrape page.
-    const client = new Client(apiSecret);
-    const resp = await client.batchScreenshotsWait(endpointId, [
+    const client = new Client();
+    const resp = await client.batchScreenshotsWait(endpointId, apiSecret, [
         {
             url: 'https://google.com',
             type: 'jpg',
@@ -154,8 +154,8 @@ import { Client } from '@basetime/snapsites-typescript';
     const endpointId = 'dyNmcmgxd4BFmuffdwCBV0';
     const requestId = '1917c524-044d-456b-b7af-4397499dade8';
 
-    const client = new Client(apiSecret);
-    const resp = await client.screenshotWait(endpointId, {
+    const client = new Client();
+    const resp = await client.screenshotWait(endpointId, apiSecret, {
         browser: 'chromium',
         url: 'https://avagate.com',
         type: 'jpg',
@@ -212,8 +212,8 @@ import { Client } from '@basetime/snapsites-typescript';
     const apiSecret = '123';
     const endpointId = 'dyNmcmgxd4BFmuffdwCBV0';
 
-    const client = new Client(apiSecret);
-    const resp = await client.screenshot(endpointId, {
+    const client = new Client();
+    const resp = await client.screenshot(endpointId, apiSecret, {
         browser: 'chromium',
         url: 'https://avagate.com',
         type: 'jpg',
@@ -287,8 +287,8 @@ Metadata is a way to store arbitrary data with a screenshot request. Status upda
     const apiSecret = '123';
     const endpointId = 'dyNmcmgxd4BFmuffdwCBV0';
 
-    const client = new Client(apiSecret);
-    const resp = await client.screenshot(endpointId, {
+    const client = new Client();
+    const resp = await client.screenshot(endpointId, apiSecret, {
         browser: 'chromium',
         url: 'https://avagate.com',
         type: 'jpg',

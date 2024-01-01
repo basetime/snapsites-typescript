@@ -7,24 +7,15 @@ import { Beacon } from './Beacon';
  * Client library that communicates with the Snapsites API.
  */
 export declare class Client {
-    readonly apiSecret: string;
-    readonly wait: boolean;
     /**
      * The default request to use when making a request.
      */
     static defaultApiRequest: Partial<ScrapeRequest>;
     /**
-     * Constructor
-     *
-     * @param apiSecret The API secret for the endpoint.
-     * @param wait Whether to wait for the request to complete.
-     */
-    constructor(apiSecret: string, wait?: boolean);
-    /**
      * Takes a screenshot of a page.
      *
      * ```ts
-     * const resp = await client.screenshot('dyNmcmgxd4BFmuffdwCBV0', {
+     * const resp = await client.screenshot('dyNmcmgxd4BFmuffdwCBV0', '123', {
      *    browser: 'chromium',
      *    url: 'https://avagate.com',
      *    type: 'jpg',
@@ -32,16 +23,26 @@ export declare class Client {
      * ```
      *
      * @param endpoint The ID of the endpoint to use.
+     * @param apiSecret The API secret for the endpoint.
      * @param req The details of the page to screenshot.
      */
-    screenshot: (endpoint: string, req: ScrapeRequest) => Promise<ApiResponse>;
+    screenshot: (endpoint: string, apiSecret: string, req: ScrapeRequest) => Promise<ApiResponse>;
+    /**
+     * Sends a screenshot request to snapsites and waits for snapsites to finish generating
+     * the screenshots before returning.
+     *
+     * @param endpoint The ID of the endpoint to use.
+     * @param apiSecret The API secret for the endpoint.
+     * @param req The details of the page to screenshot.
+     */
+    screenshotWait: (endpoint: string, apiSecret: string, req: ScrapeRequest) => Promise<ApiResponse>;
     /**
      * Sends a batch of screenshots to be taken.
      *
      * The images/pdfs will be returned in the same order they were listed in the request.
      *
      * ```ts
-     * const resp = await client.batchScreenshots('dyNmcmgxd4BFmuffdwCBV0', [
+     * const resp = await client.batchScreenshots('dyNmcmgxd4BFmuffdwCBV0', '123', [
      *    {
      *      browser: 'chromium',
      *      url: 'https://avagate.com',
@@ -56,22 +57,42 @@ export declare class Client {
      * ```
      *
      * @param endpoint The ID of the endpoint to use.
+     * @param apiSecret The API secret for the endpoint.
      * @param req The details of the page to screenshot.
      */
-    batchScreenshots: (endpoint: string, req: ScrapeRequest[]) => Promise<ApiResponseSimple>;
+    batchScreenshots: (endpoint: string, apiSecret: string, req: ScrapeRequest[]) => Promise<ApiResponseSimple>;
+    /**
+     * Sends a batch of screenshots to be taken and waits for snapsites to finish generating
+     * the screenshots before returning.
+     *
+     * @param endpoint The ID of the endpoint to use.
+     * @param apiSecret The API secret for the endpoint.
+     * @param req The details of the page to screenshot.
+     */
+    batchScreenshotsWait: (endpoint: string, apiSecret: string, req: ScrapeRequest[]) => Promise<ApiResponseSimple>;
     /**
      * Gets the status of a request.
      *
      * @param endpoint The ID of the endpoint to use.
+     * @param apiSecret The API secret for the endpoint.
      * @param apiRequest The ID of the request.
      */
-    status: (endpoint: string, apiRequest: string) => Promise<ApiStatus>;
+    status: (endpoint: string, apiSecret: string, apiRequest: string) => Promise<ApiStatus>;
+    /**
+     * Returns the status of all ApiRequests for an endpoint.
+     *
+     * @param endpoint The ID of the endpoint to use.
+     * @param apiSecret The API secret for the endpoint.
+     * @param limit The maximum number of requests to return.
+     * @param offset The offset to start at.
+     */
+    statusAll: (endpoint: string, apiSecret: string, limit?: number, offset?: number) => Promise<Omit<ApiStatus, 'logs' | 'request'>[]>;
     /**
      * Listens for beacon updates.
      *
      * ```ts
-     * const client = new Client(apiSecret, false);
-     * const resp = await client.screenshot(endpointId, {
+     * const client = new Client();
+     * const resp = await client.screenshot(endpointId, '123', {
      *     browser: 'chromium',
      *     url: 'https://avagate.com',
      *     type: 'jpg',
@@ -90,12 +111,13 @@ export declare class Client {
      */
     onBeacon: (beaconUri: string | {
         beaconUri: string;
-    }, on: (beacon: Beacon) => void) => Unsubscribe;
+    }, on: (beacons: Beacon[]) => void) => Unsubscribe;
     /**
      * Makes a request to the API.
      *
      * @param method The method to use.
      * @param url The URL to request.
+     * @param apiSecret The API secret for the endpoint.
      * @param body The body of the request.
      */
     private doRequest;

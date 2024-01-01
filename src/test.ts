@@ -1,8 +1,8 @@
 import { Client } from './Client';
 
 (async () => {
-  const client = new Client('123');
-  const resp = await client.batchScreenshots('dyNmcmgxd4BFmuffdwCBV0', [
+  const client = new Client();
+  const resp = await client.batchScreenshots('dyNmcmgxd4BFmuffdwCBV0', '123', [
     {
       url: 'https://avagate.com',
       type: 'jpg',
@@ -13,7 +13,7 @@ import { Client } from './Client';
     },
   ]);
 
-  /*const resp = await client.screenshot('dyNmcmgxd4BFmuffdwCBV0', {
+  /*const resp = await client.screenshot('dyNmcmgxd4BFmuffdwCBV0', '123', {
     url: 'https://avagate.com',
     type: 'jpg',
   });*/

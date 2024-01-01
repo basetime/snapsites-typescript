@@ -61,6 +61,13 @@ export interface ScrapeRequest {
      * Google Cloud Storage integration.
      */
     options?: Record<string, any>;
+    /**
+     * User supplied metadata that will be a part of the api status.
+     *
+     * Used by clients to pass along a unique value that they need to associate with the request. They
+     * can then find this value in the status response.
+     */
+    meta?: string;
 }
 /**
  * The types of browsers that can be created.
